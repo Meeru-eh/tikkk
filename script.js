@@ -1,69 +1,72 @@
-let board = ["", "", "", "", "", "", "", "", ""];
-let currentPlayer = "X";
-let gameActive = true;
-
-const statusText = document.getElementById("status");
-const cells = document.querySelectorAll(".cell");
-
-const winConditions = [
-  [0,1,2],
-  [3,4,5],
-  [6,7,8],
-  [0,3,6],
-  [1,4,7],
-  [2,5,8],
-  [0,4,8],
-  [2,4,6]
-];
-
-cells.forEach(cell => {
-  cell.addEventListener("click", () => handleMove(cell));
-});
-
-function handleMove(cell) {
-  const index = cell.getAttribute("data-index");
-
-  if (board[index] !== "" || !gameActive) return;
-
-  board[index] = currentPlayer;
-  cell.textContent = currentPlayer;
-
-  checkResult();
+body {
+  font-family: Arial;
+  text-align: center;
+  background: #0b0f1a;
+  color: white;
+  margin: 0;
+  padding: 0;
 }
 
-function checkResult() {
-  let roundWon = false;
-
-  for (let i = 0; i < winConditions.length; i++) {
-    const [a, b, c] = winConditions[i];
-
-    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      roundWon = true;
-      break;
-    }
-  }
-
-  if (roundWon) {
-    statusText.textContent = `${currentPlayer} wins! 🎉`;
-    gameActive = false;
-    return;
-  }
-
-  if (!board.includes("")) {
-    statusText.textContent = "It's a draw!";
-    gameActive = false;
-    return;
-  }
-
-  currentPlayer = currentPlayer === "X" ? "O" : "X";
-  statusText.textContent = `${currentPlayer}'s turn`;
+/* Title glow */
+h1 {
+  margin-top: 20px;
+  color: #00f7ff;
+  text-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff;
 }
 
-function restartGame() {
-  board = ["", "", "", "", "", "", "", "", ""];
-  currentPlayer = "X";
-  gameActive = true;
-  statusText.textContent = "X's turn";
+/* Turn text */
+h2 {
+  color: #ff4df0;
+  text-shadow: 0 0 10px #ff4df0;
+}
 
-  cells.forEach(cell => cell.textContent = "");
+/* Board */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 110px);
+  justify-content: center;
+  gap: 10px;
+  margin: 30px auto;
+}
+
+/* Cells (THIS is the glow part) */
+.cell {
+  width: 110px;
+  height: 110px;
+  background: #111827;
+  border-radius: 12px;
+  border: 2px solid #00f7ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  cursor: pointer;
+
+  transition: 0.2s;
+  box-shadow: 0 0 10px #00f7ff;
+}
+
+/* Hover glow effect */
+.cell:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #ff4df0, 0 0 40px #00f7ff;
+}
+
+/* Button glow */
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-top: 20px;
+  cursor: pointer;
+  background: transparent;
+  border: 2px solid #ff4df0;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #ff4df0;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #ff4df0;
+  color: black;
 }
