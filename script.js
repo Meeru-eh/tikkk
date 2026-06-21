@@ -1,5 +1,17 @@
 const cells = yaySound = new Audio("yay.mp3"); 
-yaySound.volume = 3;
+yaySound.volume = 3; 
+const yaySound = new Audio("yay.mp3");
+
+// unlock sound (VERY IMPORTANT for GitHub Pages)
+document.body.addEventListener("click", () => {
+  yaySound.load();
+}, { once: true });
+
+function playWinSound() {
+  yaySound.currentTime = 0;
+  
+ yaySound.play().catch(e => console.log("yay failed", e));
+  }
 const cells = document.querySelectorAll(".cell");
 const statusText = document.getElementById("status");
 const flowers = document.getElementById("flowers");
