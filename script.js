@@ -1,72 +1,94 @@
-body {
-  font-family: Arial;
-  text-align: center;
-  background: #0b0f1a;
-  color: white;
-  margin: 0;
-  padding: 0;
+const cells = document.querySelectorAll(".cell");
+const statusText = document.getElementById("status");
+const flowers = document.getElementById("flowers");
+
+let currentPlayer = "X";
+let gameActive = true;
+
+const winConditions = [
+  [0,1,2],[3,4,5],[6,7,8],
+  [0,3,6],[1,4,7],[2,5,8],
+  [0,4,8],[2,4,6]
+];
+
+let board = ["", "", "", "", "", "", "", "", ""];
+
+cells.forEach(cell => {
+  cell.addEventListener("click", () => {
+    const index = cell.getAttribute("data-index");
+
+    if (board[index] !== "" || !gameActive) return;
+
+    board[index] = currentPlayer;
+    cell.textContent = currentPlayer;
+
+    checkWinner();
+
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
+  });
+});
+
+function checkWinner() {
+  for (let condition of winConditions) {
+    const [a,b,c] = condition;
+
+    if (
+      board[a] &&
+      board[a] === board[b] &&
+      board[a] === board[c]
+    ) {
+      statusText.textContent = `${board[a]} Wins! 🌸`;
+      gameActive = false;
+
+      highlightWin(condition);
+      spawnFlowers();
+
+      return;
+    }
+  }
+
+  if (!board.includes("")) {
+    statusText.textContent = "Draw!";
+    gameActive = false;
+  }
 }
 
-/* Title glow */
-h1 {
-  margin-top: 20px;
-  color: #00f7ff;
-  text-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff;
+function highlightWin(condition) {
+  condition.forEach(i => {
+    cells[i].classList.add("win");
+  });
 }
 
-/* Turn text */
-h2 {
-  color: #ff4df0;
-  text-shadow: 0 0 10px #ff4df0;
+function spawnFlowers() {
+  for (let i = 0; i < 30; i++) {
+    const flower = document.createElement("div");
+    flower.classList.add("flower");
+    flower.textContent = "🌸";
+
+    flower.style.left = Math.random() * window.innerWidth + "px";
+    flower.style.top = Math.random() * window.innerHeight + "px";
+
+    flower.style.fontSize = (Math.random() * 20 + 10) + "px";
+
+    flowers.appendChild(flower);
+
+    setTimeout(() => {
+      flower.remove();
+    }, 2000);
+  }
 }
 
-/* Board */
-.board {
-  display: grid;
-  grid-template-columns: repeat(3, 110px);
-  justify-content: center;
-  gap: 10px;
-  margin: 30px auto;
+function resetGame() {
+  board = ["", "", "", "", "", "", "", "", ""];
+  gameActive = true;
+  currentPlayer = "X";
+  statusText.textContent = "";
+
+  cells.forEach(cell => {
+    cell.textContent = "";
+    cell.classList.remove("win");
+  });
+
+  flowers.innerHTML = "";
 }
 
-/* Cells (THIS is the glow part) */
-.cell {
-  width: 110px;
-  height: 110px;
-  background: #111827;
-  border-radius: 12px;
-  border: 2px solid #00f7ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5rem;
-  cursor: pointer;
-
-  transition: 0.2s;
-  box-shadow: 0 0 10px #00f7ff;
-}
-
-/* Hover glow effect */
-.cell:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px #ff4df0, 0 0 40px #00f7ff;
-}
-
-/* Button glow */
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  margin-top: 20px;
-  cursor: pointer;
-  background: transparent;
-  border: 2px solid #ff4df0;
-  color: white;
-  border-radius: 8px;
-  box-shadow: 0 0 10px #ff4df0;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: #ff4df0;
-  color: black;
-}
