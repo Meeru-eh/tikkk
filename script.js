@@ -1,3 +1,4 @@
+const cells = yaySound = new Audio("yay.mp3");
 const cells = document.querySelectorAll(".cell");
 const statusText = document.getElementById("status");
 const flowers = document.getElementById("flowers");
@@ -41,7 +42,8 @@ function checkWinner() {
       gameActive = false;
 
       highlightWin(condition);
-      spawnFlowers();
+      spawnFlowers(); 
+      yaySound.play();
 
       return;
     }
