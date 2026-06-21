@@ -1,23 +1,10 @@
-const cells = yaySound = new Audio("yay.mp3"); 
-yaySound.volume = 3; 
-const yaySound = new Audio("yay.mp3");
-
-// unlock sound (VERY IMPORTANT for GitHub Pages)
-document.body.addEventListener("click", () => {
-  yaySound.load();
-}, { once: true });
-
-function playWinSound() {
-  yaySound.currentTime = 0;
-  
- yaySound.play().catch(e => console.log("yay failed", e));
-  }
 const cells = document.querySelectorAll(".cell");
 const statusText = document.getElementById("status");
-const flowers = document.getElementById("flowers");
 
 let currentPlayer = "X";
 let gameActive = true;
+
+let board = ["", "", "", "", "", "", "", "", ""];
 
 const winConditions = [
   [0,1,2],[3,4,5],[6,7,8],
@@ -25,7 +12,16 @@ const winConditions = [
   [0,4,8],[2,4,6]
 ];
 
-let board = ["", "", "", "", "", "", "", "", ""];
+const yaySound = new Audio("yay.mp3");
+
+document.body.addEventListener("click", () => {
+  yaySound.load();
+}, { once: true });
+
+function playWinSound() {
+  yaySound.currentTime = 0;
+  yaySound.play() 
+}
 
 cells.forEach(cell => {
   cell.addEventListener("click", () => {
@@ -55,9 +51,9 @@ function checkWinner() {
       gameActive = false;
 
       highlightWin(condition);
-      spawnFlowers(); 
-      yaySound.play();
+      spawnFlowers();
 
+      playWinSound();
       return;
     }
   }
@@ -75,21 +71,19 @@ function highlightWin(condition) {
 }
 
 function spawnFlowers() {
+  const flowers = document.getElementById("flowers");
+
   for (let i = 0; i < 30; i++) {
-    const flower = document.createElement("div");
-    flower.classList.add("flower");
-    flower.textContent = "🌸";
+    const f = document.createElement("div");
+    f.classList.add("flower");
+    f.textContent = "🌸";
 
-    flower.style.left = Math.random() * window.innerWidth + "px";
-    flower.style.top = Math.random() * window.innerHeight + "px";
+    f.style.left = Math.random() * window.innerWidth + "px";
+    f.style.top = Math.random() * window.innerHeight + "px";
 
-    flower.style.fontSize = (Math.random() * 20 + 10) + "px";
+    flowers.appendChild(f);
 
-    flowers.appendChild(flower);
-
-    setTimeout(() => {
-      flower.remove();
-    }, 2000);
+    setTimeout(() => f.remove(), 2000);
   }
 }
 
@@ -97,13 +91,12 @@ function resetGame() {
   board = ["", "", "", "", "", "", "", "", ""];
   gameActive = true;
   currentPlayer = "X";
-  statusText.textContent = "";
 
-  cells.forEach(cell => {
-    cell.textContent = "";
-    cell.classList.remove("win");
+  cells.forEach(c => {
+    c.textContent = "";
+    c.classList.remove("win");
   });
 
-  flowers.innerHTML = "";
+  statusText.textContent = "";
+  document.getElementById("flowers").innerHTML = "";
 }
-
