@@ -1,4 +1,5 @@
-const cells = yaySound = new Audio("yay.mp3");
+const cells = yaySound = new Audio("yay.mp3"); 
+yaySound.volume = 2;
 const cells = document.querySelectorAll(".cell");
 const statusText = document.getElementById("status");
 const flowers = document.getElementById("flowers");
